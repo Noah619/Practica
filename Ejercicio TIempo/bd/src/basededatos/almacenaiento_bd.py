@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from process.gestordatosclimaticos import GestorDeDatosClimaticos
 
 # Conexión a MongoDB
 client = MongoClient('mongodb://localhost:27017/')
@@ -6,8 +7,8 @@ client = MongoClient('mongodb://localhost:27017/')
 db_name = "Noah"
 collection_name = "localizaciones"
 
-def insertar_localización(localización):
-    client[db_name][collection_name].insert_one(localización)
+def insertar_localización(ubicacion):
+    client[db_name][collection_name].insert_one(ubicacion)
 
 def obtener_nombre_bases_de_datos():
     # Obtener una lista de todos los nombres de bases de datos

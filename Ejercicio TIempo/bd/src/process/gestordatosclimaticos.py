@@ -60,4 +60,3 @@ class GestorDeDatosClimaticos:
             if ubicacion.provincia == provincia:
                 lista_ubicaciones.append(ubicacion)
         return lista_ubicaciones
-    

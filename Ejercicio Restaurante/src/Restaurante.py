@@ -1,58 +1,71 @@
-# Clase Plato
 class Plato:
-
     def __init__(self, nombre, precio, categoria):
         self.nombre = nombre
         self.precio = precio
-        self.categoria = categoria  # 'Comida' o 'Bebida'
+        self.categoria = categoria
 
     def __str__(self):
-        return f"{self.nombre} - {self.categoria} - ${self.precio}"
+        return f"{self.nombre} - ${self.precio:.2f} ({self.categoria})"
 
 
-# Clase Pedido
 class Pedido:
-
     def __init__(self, cliente):
         self.cliente = cliente
-        self.lista_de_platos = []
-        self.estado = "Pendiente"  # Estados: Pendiente, Preparando, Entregado
+        self.platos = []
+        self.estado = "Pendiente"
 
     def agregar_plato(self, plato):
-        # TODO: Implementar la lógica para agregar un plato al pedido
-        print("agregar_plato")
+        self.platos.append(plato)
 
     def cambiar_estado(self, nuevo_estado):
-        # TODO: Implementar la lógica para cambiar el estado del pedido
-        print("cambiar_estado")
-
-    def calcular_total(self):
-        # TODO: Implementar la lógica para calcular el total del pedido
-        print("calcular_total")
+        self.estado = nuevo_estado
 
     def __str__(self):
-        return f"Pedido de {self.cliente.nombre} - Estado: {self.estado}"
+        platos_str = ", ".join([plato.nombre for plato in self.platos])
+        return f"Cliente: {self.cliente.nombre}, Estado: {self.estado}, Platos: [{platos_str}]"
 
-# Clase Restaurante
+
+class Cliente:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.pedidos = []
+
+    def hacer_pedido(self, pedido):
+        self.pedidos.append(pedido)
+
+    def ver_pedidos(self):
+        print(f"Pedidos de {self.nombre}:")
+        if not self.pedidos:
+            print("  No hay pedidos.")
+        for pedido in self.pedidos:
+            print(pedido)
+
+
 class Restaurante:
-
     def __init__(self):
         self.menu = []
         self.pedidos = []
 
-    def agregar_plato_al_menu(self, plato):
-        # TODO: Implementar la lógica para agregar un plato al menú
-        print("agregar_plato_al_menu")
+    def agregar_plato(self, plato):
+        self.menu.append(plato)
 
     def registrar_pedido(self, pedido):
-        # TODO: Implementar la lógica para registrar un pedido en el restaurante
-        print("registrar_pedido")
+        self.pedidos.append(pedido)
+        pedido.cliente.hacer_pedido(pedido)
 
-    def actualizar_estado_pedido(self, cliente, nuevo_estado):
-        # TODO: Implementar la lógica para actualizar el estado del pedido de un cliente
-        print("actualizar_estado_pedido")
+    def actualizar_estado_pedido(self, pedido, nuevo_estado):
+        if pedido in self.pedidos:
+            pedido.cambiar_estado(nuevo_estado)
+            print(f"Estado del pedido de {pedido.cliente.nombre} actualizado a '{nuevo_estado}'.")
+        else:
+            print("El pedido no existe en el sistema.")
 
     def ver_menu(self):
-        # TODO: Implementar la lógica para ver el menú del restaurante
-        print("ver_menu")
+        print("Menú del Restaurante:")
+        if not self.menu:
+            print("  El menú está vacío.")
+        for plato in self.menu:
+            print(plato)
+
+
 

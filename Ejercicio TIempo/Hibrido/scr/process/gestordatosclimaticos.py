@@ -1,9 +1,8 @@
-# Clase GestorDeDatosClimaticos para manejar el flujo de datos y presentacion
-
+# Clase GestorDeDatosClimaticos para manejar el flujo de datos y presentación
 
 import json
 from beans.localizador import Localizador
-
+from basededatos import base_de_datos
 
 class GestorDeDatosClimaticos:
 
@@ -11,10 +10,11 @@ class GestorDeDatosClimaticos:
 
 
     def __init__(self):
+        self.bd = base_de_datos.basedatos() #crear un tipo de variable de la clase base de datos que es la que está creada en bd.py
+       # self.bd.vaciarcoleccion() #(esta funcion sirve para depurar)
         print("Iniciando gestor de datos climaticos")
+        self.ubicaciones = self.bd.pedirdatos() #pedir los datos del mongo
         print(f"Numero de ubicaciones actuales: {self.get_numero_ubicaciones()}")
-
-
     def get_numero_ubicaciones(self):
         return len(self.ubicaciones)
 
@@ -44,7 +44,12 @@ class GestorDeDatosClimaticos:
                 break
         
         if not ubicacion_encontrada:
-            self.ubicaciones.append(Localizador(latitud, longitud))
+            p=Localizador(latitud, longitud) # con esto obtenemos la ciudad, cp, barrio; a través de la clase localizador dandoles solo la lat y long
+            self.ubicaciones.append(p) # añadir lo uqe esta alamacenado en p a la lista de ubicaciones
+            tabla = p.to_dict() #con esto creamos una variable que la convertimos a tabla hash para despues insertarla en la bd
+            self.bd.insert(tabla)
+            self.bd.printbd()
+            # almacenar en base de datos la tabla has de la clase p
             print("Ubicación agregada correctamente")
         else:
             print("Ubicación ya existe")
@@ -57,6 +62,13 @@ class GestorDeDatosClimaticos:
                 ubicacion_encontrada = ubicacion
                 break
         return ubicacion_encontrada
+    
+    def buscar_por_provincia(self,provincia):
+        lista_ubicaciones = []
+        for ubicacion in self.ubicaciones:
+            if ubicacion.provincia == provincia:
+                lista_ubicaciones.append(ubicacion)
+        return lista_ubicaciones
     
     def buscar_por_provincia(self,provincia):
         lista_ubicaciones = []

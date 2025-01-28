@@ -1,8 +1,5 @@
 import requests
 
-
-
-
 # Clase para obtener el clima (temperatura y velocidad del viento) de Open-Meteo
 class Clima:
 
@@ -11,10 +8,19 @@ class Clima:
     temperatura =None
     velocidad_viento =None
 
+
     def __init__(self, latitud, longitud):
         self.latitud = latitud
         self.longitud = longitud
         self.__obtener_datos_climaticos()
+    
+    def to_dict(self):
+        return{
+            "latitud":self.latitud,
+            "longitud":self.longitud,
+            "temperatura":self.temperatura,
+            "velocidad_viento":self.velocidad_viento,
+        }
 
     def __str__(self):
         return (
@@ -23,10 +29,6 @@ class Clima:
             f"  Longitud: {self.longitud}\n"
             f"  Temperatura: {self.temperatura}°C\n"
             f"  Velocidad del viento: {self.velocidad_viento} km/h")
-    
-    def to_dict(self):
-        #convierte los atributos de la clase en un diccionario
-        return self.__dict__
 
     def __obtener_datos_climaticos(self):
         try:
@@ -50,3 +52,4 @@ class Clima:
 
 # a = Clima("42.86","-2.64")
 # a.obtener_datos_climaticos()
+

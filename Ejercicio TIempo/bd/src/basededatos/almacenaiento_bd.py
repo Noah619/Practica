@@ -1,35 +1,56 @@
 from pymongo import MongoClient
-from process.gestordatosclimaticos import GestorDeDatosClimaticos
+from beans.localizador import Localizador
 
-# Conexión a MongoDB
-client = MongoClient('mongodb://localhost:27017/')
+# lo que hacemos en la base de datos es definir cada una de las funciones
+# hay que crear una clase que encapsula las operaciones relacionadas con la bd
+class basedatos: 
+    def __init__(self):
+        self.client = MongoClient('mongodb://localhost:27017/') # con esot iniciamos la bd
+        self.dbname = "localizaciones" # con esto asignamos un nombre a la bd
+        self.collectionname = "Noahbd"
+        print("base de datos creada")
 
-db_name = "Noah"
-collection_name = "localizaciones"
+    
+    def numerolocalizaciones(self):
+        bd = self.client[self.dbname][self.collectionname] #accedemos a las localizaaciones y lo alacenamos en la bd
+        numerototal = bd.count_documents({}) # estamos contando el numero de locaclizaciones y lo estamos almacenando en una variable
+        return numerototal # devuelve esa variable con la información
+    
+    #es una funcion en la que insertamos la ubicacion
+    def insertarubicacion(self,localizacion):
+        self.client[self.dbname][self.collectionname].insert_one(localizacion)
 
-def insertar_localización(ubicacion):
-    client[db_name][collection_name].insert_one(ubicacion)
-
-def obtener_nombre_bases_de_datos():
-    # Obtener una lista de todos los nombres de bases de datos
-    all_dbs = client.list_database_names()
-
-    # mostramos todas las bases de datos que hay
-    print("Todos los nombres de bases de datos:")
-    for db_name in all_dbs:
-        print(db_name)
-
-def mostrar_todos_ls_datos_base_de_datos():
-    # mostramos los datos de una base de datos
-    print("Mostramos los datos de una base de datos Noah-eda")
-    db_pruebas = client[db_name][collection_name].find({})
-    for x in db_pruebas:
-        print(x)
-
-
-def buscar_codigo_postal(codigo_postal):
-    # mostramos los datos de una base de datos mediante el filtro
-    print("Mostramos los datos especificos de una base de datos Noah-eda")
-    db_pruebas = client[db_name][collection_name].find({"codigo_postal": codigo_postal})
-    for x in db_pruebas:
-        print(x)
+    
+    # definir la funcion de buscar por latitud y longitud 
+    def buscarporlatlong(self,latitud,longitud):
+        resultado = self.client[self.dbname][self.collectionname].find_one({"latitud":latitud,"longitud":longitud}) #que busque en la base de datos si ya está una localcizacion con esa lati y long
+        if (resultado!=None): # si no está en la bd, que se almacene en la bd y si ya existe, que devuelva None
+            localizacion = Localizador(resultado["latitud"],resultado["longitud"])
+            return localizacion
+        else: 
+            return None
+    
+    #funcion buscar por codigo postal
+    def buscarporcp(self,codigopostal):
+        resultado = self.client[self.dbname][self.collectionname].find({"codigo_postal":codigopostal})
+        if(resultado!=None):
+            localizaciones = [] #hemos creado una lista que almacenará todas las ubicaciones que comparten provincia
+            # creamos un bucle for para que recorra la lista 
+            for ubicacion in resultado:
+                localizacion = Localizador(ubicacion["latitud"],ubicacion["longitud"])
+                localizaciones.append(localizacion) # con el comando append lo que hacemos es añadir los elementos a la lista
+            return localizaciones
+        else:
+            return None
+        
+    #funcion buscar por provincia
+    def buscarporprov(self,provincia):
+        resultado = self.client[self.dbname][self.collectionname].find({"provincia":provincia})
+        if(resultado!=None):
+            localizaciones = [] #hemos creado una lista que almacenará todas las ubicaciones que comparten provincia
+            for ubicacion in resultado:
+                localizacion = Localizador(ubicacion["latitud"],ubicacion["longitud"])
+                localizaciones.append(localizacion)
+            return localizaciones
+        else:
+            return None

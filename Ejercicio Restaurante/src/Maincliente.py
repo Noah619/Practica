@@ -24,7 +24,8 @@ if __name__ == "__main__":
         print("\n¿Qué desea hacer?")
         print("1. Hacer un pedido")
         print("2. Ver mis pedidos")
-        print("3. Salir")
+        print("3. Pago Total")
+        print("4. Salir")
 
         opcion = input("Seleccione una opción: ")
 
@@ -47,8 +48,11 @@ if __name__ == "__main__":
 
         elif opcion == "2":
             cliente.ver_pedidos()
-
+            
         elif opcion == "3":
+            Pedido.calculo_total()
+            
+        elif opcion == "4":
             print("Gracias por pedir. ¡Hasta luego!")
             break
 

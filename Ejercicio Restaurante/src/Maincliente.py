@@ -1,7 +1,7 @@
-from Restaurante import Restaurante
-from Restaurante import Plato
-from Restaurante import Cliente
-from Restaurante import Pedido
+from clases import Restaurante
+from clases import Plato
+from clases import Cliente
+from clases import Pedido
 
 # Ejemplo de uso del sistema
 if __name__ == "__main__":

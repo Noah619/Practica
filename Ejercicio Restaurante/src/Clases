@@ -14,8 +14,8 @@ class Pedido:
         self.platos = []
         self.estado = "Pendiente"
 
-    def agregar_plato(self, plato):
-        self.platos.append(plato)
+    def agregar_plato(self, Plato):
+        self.platos.append(Plato)
 
     def cambiar_estado(self, nuevo_estado):
         self.estado = nuevo_estado
@@ -23,8 +23,13 @@ class Pedido:
     def __str__(self):
         platos_str = ", ".join([plato.nombre for plato in self.platos])
         return f"Cliente: {self.cliente.nombre}, Estado: {self.estado}, Platos: [{platos_str}]"
-    
-    
+                
+    def calculo_total(self):
+
+        preciototal = 0
+        for Plato in self.platos:
+            preciototal = preciototal + Plato.precio 
+        return f"El precio total del pedido es {preciototal} euros"
     
 
 class Restaurante:
